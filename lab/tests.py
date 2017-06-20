@@ -32,6 +32,6 @@ class TestAliquotIdentifier(TestCase):
     def test_aliquot_identifier(self):
         AliquotIdentifier(
             identifier_prefix='2345678109',
-            numeric_code='22',
-            count_padding=2,
+            numeric_code='27',
+            count_padding=20,
             identifier_length=18)
