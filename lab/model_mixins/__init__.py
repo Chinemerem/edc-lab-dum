@@ -1,1 +1,1 @@
-from .aliquot_model_mixin import AliquotModelMixin
+from lab.model_mixins.aliquot.aliquot_model_mixin import AliquotModelMixin

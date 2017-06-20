@@ -5,7 +5,7 @@ from django.utils import timezone
 from django.db.utils import IntegrityError
 
 from .models.box import Box
-from .model_mixins.aliquot_model_mixin import AliquotModelMixin
+from .models.aliquot import Aliquot
 
 
 
@@ -29,7 +29,7 @@ class TestBox(TestCase):
 class TestAliquot(TestCase):
 
     def test_aliquot_model_constraint(self):
-        AliquotModelMixin.objects.create(count=0)
+        Aliquot.objects.create(count=0)
         self.assertRaises(
             IntegrityError,
-            aliquot=AliquotModelMixin.objects.create, count=0)
+            aliquot=Aliquot.objects.create, count=0)
