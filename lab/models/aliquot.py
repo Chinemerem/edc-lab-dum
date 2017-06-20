@@ -1,7 +1,10 @@
-from lab.model_mixins.aliquot.aliquot_model_mixin import AliquotModelMixin
+from ..model_mixins import AliquotModelMixin
+from ..model_mixins  import AliquotIdentifierModelMixin
+from ..identifiers import AliquotIdentifier
+
 from django.db import models
 
 
-class Aliquot(AliquotModelMixin):
+class Aliquot(AliquotModelMixin, AliquotIdentifierModelMixin):
     objects = models.Manager()
     

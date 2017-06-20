@@ -2,10 +2,10 @@ import re
 
 from django.test import TestCase,tag
 from django.utils import timezone
-from django.db.utils import IntegrityError
 
 from .models.box import Box
 from .models.aliquot import Aliquot
+
 
 
 
@@ -25,11 +25,12 @@ class TestBox(TestCase):
         
     
 
-@tag('aliquot')
-class TestAliquot(TestCase):
+@tag('aliquotIdentifier')
+class TestAliquotIdentifier(TestCase):
 
-    def test_aliquot_model_constraint(self):
-        Aliquot.objects.create(count=0)
-        self.assertRaises(
-            IntegrityError,
-            aliquot=Aliquot.objects.create, count=0)
+    def test_aliquot_identifier_model(self):
+        Aliquot(
+            identifier_prefix='2345678109',
+            numeric_code='22',
+            count_padding=2,
+            identifier_length=18)
