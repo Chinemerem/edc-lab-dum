@@ -13,13 +13,13 @@ class AliquotIdentifier:
                     f'Unknown aliquot number/count. Expected a number '
                     f'greater than 1. Got {count}.')
             
-            else:
-                self.is_primary = True
-                parent_segment = '0000'
-                count = 1   
+        else:
+            self.is_primary = True
+            parent_segment = '0000'
+            count = 1   
                 
                 
-            options = dict(
+        options = dict(
             identifier_prefix=identifier_prefix or '',
             parent_segment=parent_segment,
             numeric_code=numeric_code or '',
