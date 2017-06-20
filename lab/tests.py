@@ -1,8 +1,12 @@
 import re
 
 from django.test import TestCase,tag
-from .models import Box
 from django.utils import timezone
+from django.db.utils import IntegrityError
+
+from .models.box import Box
+from .model_mixins.aliquot_model_mixin import AliquotModelMixin
+
 
 
 class TestBox(TestCase):
@@ -19,4 +23,13 @@ class TestBox(TestCase):
         box1 = Box(box_identifier = 'adebdjshiq8e9qe', name ='make', category='testing', box_datetime = timezone.now())
         self.assertEqual('ASE890645', box1.box_identifier)
         
-        
+    
+
+@tag('aliquot')
+class TestAliquot(TestCase):
+
+    def test_aliquot_model_constraint(self):
+        AliquotModelMixin.objects.create(count=0)
+        self.assertRaises(
+            IntegrityError,
+            aliquot=AliquotModelMixin.objects.create, count=0)

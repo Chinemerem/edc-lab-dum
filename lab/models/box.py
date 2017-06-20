@@ -1,5 +1,4 @@
 from django.db import models
-from django.db.models.deletion import PROTECT
 from django.utils import timezone
 
 
@@ -65,19 +64,3 @@ class Box(models.Model):
         null=True,
         blank=True)
 
-
-
-class BoxItem(models.Model):
-
-    box = models.ForeignKey(Box, on_delete=PROTECT)
-
-    position = models.IntegerField()
-
-    identifier = models.CharField(
-        max_length=25)
-
-    comment = models.CharField(
-        max_length=25,
-        null=True,
-        blank=True)
-    
