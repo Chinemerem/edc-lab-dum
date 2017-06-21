@@ -7,7 +7,7 @@ from .models.box import Box
 from .identifiers import AliquotIdentifierLengthError,\
     AliquotIdentifierCountError,AliquotIdentifier
 from .identifiers import Prefix,PrefixLengthError,\
-    PrefixKeyError
+    PrefixKeyError,PrefixMissingLengthError
 
 
 
@@ -148,14 +148,24 @@ class TestAliquotPrefix(TestCase):
                           template='{opt1}{opt2}',
                           length=7,
                           opt1='opt1',opt2='opt2')
-        
+    
      
     @tag('validLength')
     def test_prefix_valid_length(self):
-        self.assertRaises(PrefixLengthError, Prefix,
+        self.assertRaises(PrefixMissingLengthError, Prefix,
                           template='{opt}{opt2}',
                           length=8,
-                          opt='opt1',opt2='opt2') 
+                          opt='opt1',
+                          opt2='opt2') 
+        
+    
+    @tag('length')
+    def test_length_none(self):
+        self.assertRaises(PrefixMissingLengthError, Prefix,
+                          template='{opt1}{opt2}',
+                          opt1='opt10',
+                          opt2='opt2')
+            
     
     @tag('missingOpt')    
     def test_prefix_missing_opt(self):
@@ -171,6 +181,8 @@ class TestAliquotPrefix(TestCase):
         self.assertRaises(
             PrefixKeyError,
             Prefix,
-            template='{opt1}{opt2}',
-            length=7,
-            opt1='opt1',opt2='op7')
+            template='{opt1}{opt2}{opt3}',
+            length=9,
+            opt1='opt1',
+            opt2='op7',
+            opt3=90)

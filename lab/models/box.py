@@ -1,17 +1,14 @@
 from django.db import models
 from django.utils import timezone
 
+from ..constants import PACKED,SHIPPED,\
+VERIFIED,TESTING,STORAGE
 
 
-CONDITION_OK = 'OK'
-PACKED = 'packed'
-SHIPPED = 'shipped'
-STORAGE = 'storage'
-TESTING = 'testing'
-VERIFIED = 'verified'
+
 OTHER = 'other'
 OPEN = 'open'
-WHOLE_BLOOD = '02'
+# WHOLE_BLOOD = '02'
 
 
 
