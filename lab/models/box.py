@@ -5,10 +5,8 @@ from ..constants import PACKED,SHIPPED,\
 VERIFIED,TESTING,STORAGE
 
 
-
 OTHER = 'other'
 OPEN = 'open'
-# WHOLE_BLOOD = '02'
 
 
 

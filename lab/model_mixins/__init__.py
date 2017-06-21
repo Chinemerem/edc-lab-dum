@@ -1,1 +1,2 @@
 from .aliquot import AliquotModelMixin,AliquotIdentifierModelMixin, AliquotTypeModelMixin
+from .receiving import ManifestModelMixin
