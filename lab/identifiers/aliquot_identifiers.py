@@ -1,4 +1,11 @@
 
+class AliquotIdentifierLengthError(Exception):
+    pass
+
+
+class AliquotIdentifierCountError(Exception):
+    pass
+
 class AliquotIdentifier:
     
     template = '{identifier_prefix}{parent_segment}{numeric_code}{count}'
@@ -20,7 +27,7 @@ class AliquotIdentifier:
         if parent_segment:
             self.is_primary=False
             if not count or count <=1:
-                raise Exception(
+                raise AliquotIdentifierCountError(
                     f'Unknown aliquot number/count. Expected a number '
                     f'greater than 1. Got {count}.')
             
@@ -40,7 +47,7 @@ class AliquotIdentifier:
         self.identifier = self.template.format(**options)
 
         if len(self.identifier) != identifier_length:
-            raise Exception(
+            raise AliquotIdentifierLengthError(
                 f'Invalid length. Expected {identifier_length}. '
                 f'Got len({self.identifier})=={len(self.identifier)}.')
 

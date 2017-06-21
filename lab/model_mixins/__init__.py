@@ -1,2 +1,1 @@
-from .aliquot import AliquotModelMixin
-from .aliquot import AliquotIdentifierModelMixin
+from .aliquot import AliquotModelMixin,AliquotIdentifierModelMixin, AliquotTypeModelMixin
