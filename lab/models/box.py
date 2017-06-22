@@ -1,7 +1,7 @@
 from django.db import models
 from django.utils import timezone
 from django.db.models import PROTECT
-from ..constants import VERIFIED, TESTING, STORAGE, DAMAGED, OTHER, OPEN
+from ..constants import TESTING, STORAGE, DAMAGED, OTHER, OPEN
 from .box_type import BoxType
 
 
@@ -13,7 +13,6 @@ BOX_CATEGORY = (
 
 STATUS = (
     (OPEN, 'Open'),
-    (VERIFIED, 'Verified'),
     (DAMAGED, 'Damaged'),
 )
 

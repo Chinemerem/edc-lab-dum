@@ -1,9 +1,9 @@
 # import re
 
 from django.test import TestCase, tag
-# from django.utils import timezone
 from .models import Box, BoxType
-from .receive import ReceiveBox
+from .receive import ReceiveBox, DamagedBoxRejected
+
 
 # from .models import Aliquot
 # from lab.models import box_item
@@ -18,35 +18,45 @@ class TestBox(TestCase):
     @tag('check_box_items')
     def test_check_box_items(self):
         boxtype = BoxType.objects.create(
-            name='Bluffy Coat', down=10, across=10, total=10)
+            name='Bluffy Coat', down=10, across=10, total=100)
         box = Box.objects.create(
-            identifier='2831-9900-8872',
+            box_identifier='2831-9900-8872',
             category='storage',
             box_type=boxtype)
         box.boxitem_set.create(position=1)
         self.assertIn(box.boxitem_set.all.count(), 1)
 
-    @tag('receive_valid_box')
-    def test_receive_valid_box(self):
-        boxtype = BoxType(name='Whole Blood')
-        box = Box(
-            identifier='2831-9900-8872',
-            category='storage',
-            box_type=boxtype
-        )
-        receive_box1 = ReceiveBox(box)
-        self.assertTrue(receive_box1.is_box_valid())
+#     @tag('receive_valid_box')
+#     def test_receive_valid_box(self):
+#         boxtype = BoxType(name='Whole Blood')
+#         box = Box(
+#             box_identifier='2831-9900-8872',
+#             category='storage',
+#             box_type=boxtype
+#         )
+#         receive_box1 = ReceiveBox
+#         self.assertTrue(receive_box1.is_box_valid())
 
-    @tag('receive_invalid_box')
-    def test_receive_invalid_box(self):
-        receive_box2 = ReceiveBox()
-        self.assertFalse(receive_box2.is_box_valid())
+#     @tag('receive_invalid_box')
+#     def test_receive_invalid_box(self):
+#         receive_box2 = ReceiveBox
+#         self.assertFalse(receive_box2.is_box_valid())
 
     @tag('box_items_type')
     def test_check_box_item_type(self):
         self.assertIsNot(self.aliquot.type, self.box_type)
 
-    def test
+    @tag('box_condition')
+    def test_box_condition(self):
+        boxtype = BoxType.objects.create(
+            name='Whole Blood', down=10, across=10, total=100)
+
+        box = Box.objects.create(
+            box_identifier='0000-9900-8872',
+            category='storage',
+            status='damaged',
+            box_type=boxtype)
+        self.assertRaises(DamagedBoxRejected, ReceiveBox, box=box)
 
 #     @tag('accept_box')
 #     def test_accept_box(self):

@@ -25,8 +25,8 @@ class BoxType(models.Model):
         max_length=15,
         default='across',
         choices=FILL_ORDER)
-    
+
     objects = models.Manager()
-    
+
     def __str__(self):
         return '{} max={}'.format(self.name, self.total)
