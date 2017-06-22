@@ -1,13 +1,8 @@
 from django.db import models
 from django.utils import timezone
-
-from ..constants import PACKED,SHIPPED,\
-VERIFIED,TESTING,STORAGE
-
-
-OTHER = 'other'
-OPEN = 'open'
-
+from django.db.models import PROTECT
+from ..constants import VERIFIED, TESTING, STORAGE, DAMAGED, OTHER, OPEN
+from .box_type import BoxType
 
 
 BOX_CATEGORY = (
@@ -19,13 +14,12 @@ BOX_CATEGORY = (
 STATUS = (
     (OPEN, 'Open'),
     (VERIFIED, 'Verified'),
-    (PACKED, 'Packed'),
-    (SHIPPED, 'Shipped'),
-    )
+    (DAMAGED, 'Damaged'),
+)
 
-    
+
 class Box(models.Model):
-    
+
     box_identifier = models.CharField(
         max_length=25,
         editable=False,
@@ -36,26 +30,28 @@ class Box(models.Model):
         null=True,
         blank=True)
 
+    box_type = models.ForeignKey(
+        BoxType, on_delete=PROTECT)
+
     box_datetime = models.DateTimeField(
         default=timezone.now)
 
-   
     category = models.CharField(
         max_length=25,
         default=TESTING,
         choices=BOX_CATEGORY)
-
 
     status = models.CharField(
         max_length=15,
         default=OPEN,
         choices=STATUS)
 
-    accept_primary = models.BooleanField(
+    accept_box = models.BooleanField(
         default=False,
-        help_text='Tick to allow \'primary\' specimens to be added to this box')
+        help_text='Tick to accept/decline this box')
 
     comment = models.TextField(
         null=True,
         blank=True)
 
+    objects = models.Manager()

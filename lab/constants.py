@@ -5,5 +5,6 @@ STORAGE = 'storage'
 TESTING = 'testing'
 VERIFIED = 'verified'
 WHOLE_BLOOD = '02'
-
-
+OTHER = 'other'
+OPEN = 'open'
+DAMAGED = 'Damaged'

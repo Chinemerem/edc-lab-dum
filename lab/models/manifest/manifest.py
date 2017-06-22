@@ -1,23 +1,25 @@
 from django.db import models
-# from django.db.models import PROTECT
+from django.db.models import PROTECT
 
+from .consignee import Consignee
+from .shipper import Shipper
 from ...model_mixins import ManifestModelMixin
 
 
 
 class Manifest(ManifestModelMixin):
-#     
-#     consignee = models.ForeignKey(
-#         Consignee,
-#         verbose_name='Consignee',
-#         on_delete=PROTECT)
-# 
-#     shipper = models.ForeignKey(
-#         Shipper,
-#         verbose_name='Shipper/Exporter',
-#         on_delete=PROTECT)
-# 
-#     
+     
+    consignee = models.ForeignKey(
+        Consignee,
+        verbose_name='Consignee',
+        on_delete=PROTECT)
+ 
+    shipper = models.ForeignKey(
+        Shipper,
+        verbose_name='Shipper/Exporter',
+        on_delete=PROTECT)
+ 
+     
     
     objects  =models.Manager()
     
