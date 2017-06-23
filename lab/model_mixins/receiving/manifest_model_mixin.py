@@ -2,7 +2,7 @@ from django.db import models
 from django.utils import timezone
 # from django.apps import apps as django_apps
 
-from ...constants import TESTING,STORAGE
+from ...constants import TESTING, STORAGE
 # from ...identifiers import ManifestIdentifier
 
 OTHER = 'other'
@@ -18,29 +18,28 @@ MANIFEST_CATEGORY = (
     (TESTING, 'Testing'),
     (STORAGE, 'Storage'),
     (OTHER, 'Other')
-    )
-    
-    
+)
+
 
 class ManifestModelMixin(models.Model):
-    
+
     manifest_identifier = models.CharField(
         verbose_name='Manifest Identifier',
-        max_length= 25,
+        max_length=25,
         editable=False,
         unique=True)
-    
-    manifest_datetime= models.DateTimeField(
+
+    manifest_datetime = models.DateTimeField(
         default=timezone.now)
-    
+
     export_datetime = models.DateTimeField(
         null=True,
         blank=True)
-    
+
     export_references = models.TextField(
         null=True,
         blank=True)
-    
+
     description = models.TextField(
         verbose_name='Description of contents',
         null=True,

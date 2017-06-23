@@ -40,6 +40,17 @@ class Box(models.Model):
         default=TESTING,
         choices=BOX_CATEGORY)
 
+    category_other = models.CharField(
+        max_length=25,
+        null=True,
+        blank=True)
+
+    specimen_types = models.CharField(
+        max_length=25,
+        help_text=(
+            'List of specimen types in this box. Use two-digit numeric '
+            'codes separated by commas.'))
+
     status = models.CharField(
         max_length=15,
         default=OPEN,
@@ -54,3 +65,41 @@ class Box(models.Model):
         blank=True)
 
     objects = models.Manager()
+
+    def __str__(self):
+        return self.name
+
+    @property
+    def count(self):
+        return self.boxitem_set.all().count()
+
+    @property
+    def items(self):
+        return self.boxitem_set.all().order_by('position')
+
+    @property
+    def human_readable_identifier(self):
+        x = self.box_identifier
+        return '{}-{}-{}'.format(x[0:4], x[4:8], x[8:12])
+
+    @property
+    def next_position(self):
+        """Returns an integer or None.
+        """
+        last_obj = self.boxitem_set.all().order_by('position').last()
+        if not last_obj:
+            next_position = 1
+        else:
+            next_position = last_obj.position + 1
+        if next_position > self.box_type.total:
+            next_position = None
+        return next_position
+
+    @property
+    def max_position(self):
+        return
+
+    class Meta:
+        app_label = 'lab'
+        ordering = ('-box_datetime', )
+        verbose_name_plural = 'Boxes'

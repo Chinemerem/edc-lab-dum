@@ -1,4 +1,5 @@
 from lab.models.box import Box
+from django.utils import timezone
 
 
 class DamagedBoxRejected(Exception):
@@ -7,8 +8,9 @@ class DamagedBoxRejected(Exception):
 
 class ReceiveBox:
 
-    def __init_(self, box=None):
-        self.box = box if box.status is not 'damaged' else None
+    def __init__(self, box=None, manifest=None):
+        self.box = box
+        self.manifest = manifest
         if not self.box:
             raise DamagedBoxRejected(
                 f'The box is rejected because it is not in good condition'
@@ -16,6 +18,15 @@ class ReceiveBox:
 
     def is_box_valid(self):
         return isinstance(self.box, Box)
+
+    def is_box_datetime_valid(self):
+        now = timezone.now()
+        dateCheck = False
+        if self.manifest.manifest_datetime <= now:
+            if self.box.box_datetime <= self.manifest.manifest_datetime:
+                dateCheck = True
+
+        return dateCheck
 
 #     def isAllItemsTypeValid(self):
 #         items = self.box.boxitem_set.all()

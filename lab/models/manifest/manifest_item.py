@@ -4,9 +4,8 @@ from django.db.models import PROTECT
 from .manifest import Manifest
 
 
-
 class ManifestItem():
-    
+
     manifest = models.ForeignKey(Manifest, on_delete=PROTECT)
 
     identifier = models.CharField(
@@ -16,14 +15,14 @@ class ManifestItem():
         max_length=25,
         null=True,
         blank=True)
-    
+
     objects = models.Manager()
-    
+
     def human_readable_identifier(self):
         x = self.identifier
         return '{}-{}-{}'.format(x[0:4], x[4:8], x[8:12])
-    
+
     class Meta:
         app_label = 'lab'
         ordering = ('created', )
-        unique_together =('manifest', 'identifier')
+        unique_together = ('manifest', 'identifier')

@@ -3,6 +3,7 @@ from django.db.models.deletion import PROTECT
 
 from .box import Box
 
+
 class BoxItem(models.Model):
 
     box = models.ForeignKey(Box, on_delete=PROTECT)
