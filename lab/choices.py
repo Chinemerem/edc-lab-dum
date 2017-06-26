@@ -12,10 +12,10 @@ ALIQUOT_CONDITIONS = (
     ('10', 'OK'),
     ('20', 'Inadequate volume for testing'),
     ('30', 'Clotted or haemolised'),
-    ('40', 'Wrong tube type, unable to test'),
+    ('40', 'Wrong tube type, unable to tests'),
     ('50', 'Sample degradation has occured. Unsuitable for testing'),
     ('60', 'Expired tube'),
-    ('70', 'Technical problem at lab, unable to test'),
+    ('70', 'Technical problem at lab, unable to tests'),
 )
 
 

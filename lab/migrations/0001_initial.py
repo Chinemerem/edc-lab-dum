@@ -29,7 +29,7 @@ class Migration(migrations.Migration):
                 ('current_measure', models.DecimalField(decimal_places=2, default='5.00', max_digits=10)),
                 ('measure_units', models.CharField(choices=[('mL', 'mL'), ('uL', 'uL'), ('spots', 'spots'), ('n/a', 'Not Applicable')], default='mL', max_length=25)),
                 ('status', models.CharField(choices=[('available', 'available'), ('consumed', 'consumed')], default='available', max_length=25)),
-                ('condition', models.CharField(choices=[('10', 'OK'), ('20', 'Inadequate volume for testing'), ('30', 'Clotted or haemolised'), ('40', 'Wrong tube type, unable to test'), ('50', 'Sample degradation has occured. Unsuitable for testing'), ('60', 'Expired tube'), ('70', 'Technical problem at lab, unable to test')], default='10', max_length=25)),
+                ('condition', models.CharField(choices=[('10', 'OK'), ('20', 'Inadequate volume for testing'), ('30', 'Clotted or haemolised'), ('40', 'Wrong tube type, unable to tests'), ('50', 'Sample degradation has occured. Unsuitable for testing'), ('60', 'Expired tube'), ('70', 'Technical problem at lab, unable to tests')], default='10', max_length=25)),
                 ('comment', models.CharField(blank=True, max_length=50, null=True)),
                 ('aliquot_identifier', models.CharField(max_length=25, unique=True)),
                 ('parent_identifier', models.CharField(editable=False, max_length=25, verbose_name='Parent aliquot Identifier')),
