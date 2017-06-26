@@ -2,7 +2,11 @@ from lab.models.box import Box
 from django.utils import timezone
 
 
-class BoxRejected(Exception):
+class BoxRejectedException(Exception):
+    pass
+
+
+class DuplicateBoxException(Exception):
     pass
 
 
@@ -12,7 +16,7 @@ class ReceiveBox:
         self.box = box
         self.manifest = manifest
         if not self.box:
-            raise BoxRejected(
+            raise BoxRejectedException(
                 f'The box is rejected because it is not in good condition'
                 f'Box status is {box.status}')
         self.accept_box()
@@ -37,7 +41,10 @@ class ReceiveBox:
         return box_item == manifest_item
 
     def accept_box(self):
-        if self.is_box_items_count_equal_manifest_item_count() and\
-                self.is_box_datetime_valid():
-            self.box.accept_box = True
-            self.box.save()
+        if self.box.accept_box:
+            raise DuplicateBoxException(f'duplicate Box')
+        else:
+            if self.is_box_items_count_equal_manifest_item_count() and\
+                    self.is_box_datetime_valid():
+                self.box.accept_box = True
+                self.box.save()
