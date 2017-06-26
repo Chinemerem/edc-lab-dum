@@ -1,10 +1,9 @@
 from django.db import models
 from django.db.models import PROTECT
-
 from .manifest import Manifest
 
 
-class ManifestItem():
+class ManifestItem(models.Model):
 
     manifest = models.ForeignKey(Manifest, on_delete=PROTECT)
 
@@ -24,5 +23,4 @@ class ManifestItem():
 
     class Meta:
         app_label = 'lab'
-        ordering = ('created', )
         unique_together = ('manifest', 'identifier')

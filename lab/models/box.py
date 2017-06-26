@@ -3,7 +3,7 @@ from django.utils import timezone
 from django.db.models import PROTECT
 from ..constants import TESTING, STORAGE, DAMAGED, OTHER, OPEN
 from .box_type import BoxType
-
+from ..identifiers import BoxIdentifier
 
 BOX_CATEGORY = (
     (TESTING, 'Testing'),
@@ -69,11 +69,9 @@ class Box(models.Model):
     def __str__(self):
         return self.name
 
-    @property
     def count(self):
         return self.boxitem_set.all().count()
 
-    @property
     def items(self):
         return self.boxitem_set.all().order_by('position')
 
@@ -95,11 +93,19 @@ class Box(models.Model):
             next_position = None
         return next_position
 
-    @property
-    def max_position(self):
-        return
+#     @property
+#     def max_position(self):
+#         return
+
+    def save(self, *args, **kwargs):
+        if not self.box_identifier:
+            identifier = BoxIdentifier(model=self.__class__)
+            self.identifier = identifier.identifier
+        if not self.name:
+            self.name = self.box_identifier
+        super().save(*args, **kwargs)
 
     class Meta:
         app_label = 'lab'
-        ordering = ('-box_datetime', )
+#         ordering = ('-box_datetime', )
         verbose_name_plural = 'Boxes'

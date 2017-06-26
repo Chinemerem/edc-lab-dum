@@ -1,18 +1,82 @@
 # import re
+import datetime
 
 from django.test import TestCase, tag
-from .models import Box
-from .receive import ReceiveBox
+from django.utils import timezone
+# from django.db.utils import IntegrityError
+
+from .models import Box, BoxType, Manifest
+from .receive import ReceiveBox, BoxRejected
 # from .identifiers import AliquotIdentifierLengthError,\
 #     AliquotIdentifierCountError, AliquotIdentifier
 # from .identifiers import Prefix, PrefixLengthError,\
 #     PrefixKeyError, PrefixMissingLengthError
-from .model_mixins import ManifestModelMixin
-import datetime
-from django.utils import timezone
 
 
 class TestReceiveBox(TestCase):
+
+    @tag('check_box_items')
+    def test_check_box_items(self):
+        boxtype = BoxType.objects.create(
+            name='Bluffy Coat', down=10, across=10, total=100)
+        box = Box.objects.create(
+            box_identifier='2831-9900-8872',
+            category='storage',
+            box_type=boxtype)
+        box.boxitem_set.create(position=1)
+        box.boxitem_set.create(position=2)
+        manifest = Manifest.objects.create()
+        manifest.manifestitem_set.create(identifier='3336-2332-6612')
+        manifest.manifestitem_set.create(identifier='9936-8373-0000')
+        ReceiveBox(box=box, manifest=manifest)
+        self.assertEqual(box.count(), manifest.count())
+
+    @tag('receive_valid_box')
+    def test_receive_valid_box(self):
+        boxtype = BoxType.objects.create(
+            name='Whole Blood',
+            across=9,
+            down=9,
+            total=81)
+        box = Box.objects.create(
+            box_identifier='2831-9900-8872',
+            category='storage',
+            box_type=boxtype
+        )
+        box.boxitem_set.create(position=1)
+        manifest = Manifest.objects.create()
+        ReceiveBox(box=box, manifest=manifest)
+
+    @tag('receive_invalid_box')
+    def test_receive_invalid_box(self):
+        boxtype = BoxType.objects.create(
+            name='Bluffy Coat', across=9, down=9, total=81)
+        box = Box.objects.create(
+            box_identifier='2831-9900-8872',
+            category='storage',
+            box_type=boxtype
+        )
+        self.assertRaises(
+            Exception,
+            ReceiveBox,
+            box=box
+        )
+
+    @tag('box_condition')
+    def test_box_condition(self):
+        boxtype = BoxType.objects.create(
+            name='Whole Blood', down=10, across=10, total=100)
+
+        box = Box.objects.create(
+            box_identifier='0000-9900-8872',
+            category='storage',
+            status='damaged',
+            box_type=boxtype)
+        self.assertRaises(
+            BoxRejected,
+            ReceiveBox,
+            box=box
+        )
 
     @tag('check_time_equal')
     def test_check_time_equal(self):
@@ -21,7 +85,7 @@ class TestReceiveBox(TestCase):
             category='storage',
             box_datetime=timezone.now(),
         )
-        manifest = ManifestModelMixin(
+        manifest = Manifest(
             manifest_identifier='2001-9900-8872',
             manifest_datetime=timezone.now(),
         )
@@ -36,7 +100,7 @@ class TestReceiveBox(TestCase):
             category='storage',
             box_datetime=timezone.now() - datetime.timedelta(days=10),
         )
-        manifest = ManifestModelMixin(
+        manifest = Manifest(
             manifest_identifier='2001-9900-8872',
             manifest_datetime=timezone.now() - datetime.timedelta(days=5),
         )
@@ -51,7 +115,7 @@ class TestReceiveBox(TestCase):
             category='storage',
             box_datetime=timezone.now() + datetime.timedelta(days=5),
         )
-        manifest = ManifestModelMixin(
+        manifest = Manifest(
             manifest_identifier='2001-9900-8872',
             manifest_datetime=timezone.now(),
         )
@@ -66,7 +130,7 @@ class TestReceiveBox(TestCase):
             category='storage',
             box_datetime=timezone.now() + datetime.timedelta(days=5),
         )
-        manifest = ManifestModelMixin(
+        manifest = Manifest(
             manifest_identifier='2001-9900-8872',
             manifest_datetime=timezone.now() - datetime.timedelta(days=5),
         )
@@ -74,49 +138,46 @@ class TestReceiveBox(TestCase):
                              manifest=manifest).is_box_datetime_valid()
         self.assertFalse(is_date)
 
-#     @tag('check_box_items')
-#     def test_check_box_items(self):
+    @tag('accept_valid_box')
+    def test_accept_valid_box(self):
+        boxtype = BoxType.objects.create(
+            name='Whole Blood', across=10, down=10, total=100
+        )
+        box = Box.objects.create(
+            box_identifier='2809-9900-8872',
+            category='storage',
+            box_type=boxtype,
+            box_datetime=timezone.now() + datetime.timedelta(days=5)
+        )
+        box.boxitem_set.create(position=1)
+        manifest = Manifest.objects.create(
+            manifest_datetime=timezone.now() + datetime.timedelta(days=5))
+        manifest.manifestitem_set.create(
+            identifier='3309-2332-6612'
+        )
+
+        ReceiveBox(box=box, manifest=manifest)
+        self.assertTrue(box.accept_box)
+
+
+#     @tag('duplicateBox')
+#     def test_received_duplicate_box(self):
 #         boxtype = BoxType.objects.create(
-#             name='Bluffy Coat', down=10, across=10, total=100)
+#             name='Bluffy coat', across=9, down=5, total=45)
 #         box = Box.objects.create(
 #             box_identifier='2831-9900-8872',
 #             category='storage',
 #             box_type=boxtype)
-#         box.boxitem_set.create(position=1)
-#         self.assertEqual(box.boxitem_set.all().count(), 1)
 #
-#     @tag('receive_valid_box')
-#     def test_receive_valid_box(self):
-#         boxtype = BoxType(name='Whole Blood')
-#         box = Box(
-#             box_identifier='2831-9900-8872',
-#             category='storage',
-#             box_type=boxtype
-#         )
-#         receive_box1 = ReceiveBox(box)
-#         self.assertTrue(receive_box1.is_box_valid())
+#         manifest = Manifest.objects.create()
 #
-#     @tag('receive_invalid_box')
-#     def test_receive_invalid_box(self):
-#         receive_box2 = ReceiveBox
-#         self.assertFalse(receive_box2.is_box_valid())
-#
-#     @tag('box_condition')
-#     def test_box_condition(self):
-#         boxtype = BoxType.objects.create(
-#             name='Whole Blood', down=10, across=10, total=100)
-#
-#         box = Box.objects.create(
-#             box_identifier='0000-9900-8872',
-#             category='storage',
-#             status='damaged',
-#             box_type=boxtype)
 #         self.assertRaises(
-#             DamagedBoxRejected,
+#             IntegrityError,
 #             ReceiveBox,
-#             box=box
-#         )
-#
+#             box=box,
+#             manifest=manifest)
+
+
 #
 # class TestManifest:
 #
