@@ -12,11 +12,11 @@ class TestAliquotIdentifier(TestCase):
 
     @tag('validLength')
     def test_valid_length(self):
-        AliquotIdentifier(
+        print(AliquotIdentifier(
             identifier_prefix='2345678109',
             numeric_code='27',
             count_padding=2,
-            identifier_length=18)
+            identifier_length=18))
 
     @tag('lenghtRaises')
     def test_length_raises(self):
@@ -67,7 +67,7 @@ class TestAliquotIdentifier(TestCase):
     @tag('parentSegment')
     def test_not_primary_parent_segment(self):
         identifier = AliquotIdentifier(
-            parent_segment='0201',
+            parent_segment='1102',
             identifier_prefix='XXXXXXXX',
             numeric_code='11',
             count=222,
@@ -128,7 +128,7 @@ class TestAliquotPrefix(TestCase):
                           length=7,
                           opt1='opt1', opt2='opt2')
 
-    @tag('validLength')
+    @tag('prefixvalidLength')
     def test_prefix_valid_length(self):
         self.assertRaises(PrefixMissingLengthError, Prefix,
                           template='{opt}{opt2}',
