@@ -4,7 +4,7 @@ from ..models import Aliquot, Box, BoxType, Manifest, ManifestItem
 from ..models import ManifestData, AliquotData
 # from edc_new_app.model_mixins import aliquot
 # from edc_new_app.models import manifest_holding_table, Manifest, ManifestItem
-from ..receive import ReceiveTemp
+from ..receive import ReceiveAliquot
 
 
 class TestReceive(TestCase):
@@ -81,16 +81,15 @@ class TestReceive(TestCase):
             manifest=mani,
             identifier='AAAO-QWER-2RRR')
         self.assertFalse(manifest.manifest_on_database)
-        ReceiveTemp(manifest=manifest, aliquot=self.aliquot,
-                    manifest_item=manifest_item)
+        ReceiveAliquot(manifest=manifest, aliquot=self.aliquot,
+                       manifest_item=manifest_item)
         self.assertTrue(manifest.manifest_on_database)
 
     @tag('93')
     def test_manifest_not_in_database(self):
         """Assert that a manifest is not in the database
         """
-        mani = Manifest.objects.create()
         manifest = Manifest(manifest_identifier='M01ZXCVBASDF')
-        ReceiveTemp(manifest=manifest, aliquot=self.aliquot,
-                    manifest_item=self.manifest_item)
+        ReceiveAliquot(manifest=manifest, aliquot=self.aliquot,
+                       manifest_item=self.manifest_item)
         self.assertFalse(manifest.manifest_on_database)

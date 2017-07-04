@@ -25,7 +25,7 @@ class ManifestNotOnDatabase(Exception):
     pass
 
 
-class ReceiveTemp:
+class ReceiveAliquot:
 
     def __init__(self, aliquot=None, manifest_item=None,
                  manifest=None):
