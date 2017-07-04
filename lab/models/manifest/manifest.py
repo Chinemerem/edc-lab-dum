@@ -7,6 +7,11 @@ class Manifest(ManifestModelMixin):
 
     objects = models.Manager()
 
+    manifest_on_database = models.BooleanField(
+        default=False,
+        help_text='Flagged if electronic '
+        'manifest exists')
+
     def __str__(self):
         return '{} created on {} by {}'.format(
             self.manifest_identifier,

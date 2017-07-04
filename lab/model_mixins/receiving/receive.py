@@ -4,12 +4,6 @@ from django.utils import timezone
 
 class Receive(models.Model):
 
-    aliqout = models.CharField(
-        max_length=50,
-        editable=False,
-        unique=True
-    )
-
     receive_identifier = models.CharField(
         max_length=25,
         editable=False,
@@ -19,6 +13,7 @@ class Receive(models.Model):
     receive_datetime = models.DateTimeField(
         default=timezone.now
     )
+
     specimen_type = models.CharField(
         max_length=2
     )
@@ -50,7 +45,13 @@ class Receive(models.Model):
     )
 
     collection_datetime = models.DateTimeField()
+    clinician_initials = models.CharField(
+        verbose_name='Clinicians\'s initials',
+        max_length=3,)
 
+    tube_count = models.IntegerField(default=1, null=True, blank=False)
 
-class Meta:
-    abstract = True
+    def __str__(self):
+        return '{}: {}'.format(
+            self.receive_identifier,
+            self.receive_datetime.strftime('%Y-%m-%d %H:%M'))
